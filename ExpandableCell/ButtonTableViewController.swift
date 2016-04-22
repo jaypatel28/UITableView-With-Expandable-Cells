@@ -9,6 +9,8 @@
 import UIKit
 
 class ButtonTableViewController: UITableViewController {
+    
+    var selectedIndexPath: NSIndexPath?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,23 +31,90 @@ class ButtonTableViewController: UITableViewController {
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 0
+        return 1
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return 0
+        return 2
     }
 
-    /*
+    
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("reuseIdentifier", forIndexPath: indexPath)
-
-        // Configure the cell...
-
-        return cell
+        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as! ButtonTableViewCell
+        cell.titleLabel.text = "Select Button"
+//        cell.button1.tag = indexPath.row
+        cell.button1.addTarget(self, action: #selector(ButtonTableViewController.buttonOneClicked(_:)), forControlEvents: .TouchUpInside)
+//        cell.button2.tag = indexPath.row
+        cell.button2.addTarget(self, action: #selector(ButtonTableViewController.buttonTwoClicked(_:)), forControlEvents: .TouchUpInside)
+//        cell.button3.tag = indexPath.row
+        cell.button3.addTarget(self, action: #selector(ButtonTableViewController.buttonThreeClicked(_:)), forControlEvents: .TouchUpInside)
+//        cell.button4.tag = indexPath.row
+        cell.button4.addTarget(self, action: #selector(ButtonTableViewController.buttonFourClicked(_:)), forControlEvents: .TouchUpInside)
+        
+        return cell    }
+    
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        let previousIndexPath = selectedIndexPath
+        if indexPath == selectedIndexPath {
+            selectedIndexPath = nil
+        } else {
+            selectedIndexPath = indexPath
+        }
+        
+        var indexPaths: Array<NSIndexPath> = []
+        if let previous = previousIndexPath {
+            indexPaths += [previous]
+        }
+        
+        if let current = selectedIndexPath {
+            indexPaths += [current]
+        }
+        
+        if indexPaths.count > 0 {
+            tableView.reloadRowsAtIndexPaths(indexPaths, withRowAnimation: .Automatic)
+        }
+        
     }
-    */
+    
+    
+    override func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
+        
+        (cell as! ButtonTableViewCell).watchFrameChanges()
+        
+    }
+    
+    override func tableView(tableView: UITableView, didEndDisplayingCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
+        
+        (cell as! ButtonTableViewCell).ignoreFrameChanges()
+    }
+    
+    
+    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        if indexPath == selectedIndexPath {
+            return ButtonTableViewCell().expandedHeight
+        } else {
+            return ButtonTableViewCell().defaultHeight
+        }
+    }
+    
+    
+    @IBAction func buttonOneClicked(sender: UIButton){
+        print("Button One Clicked")
+    }
+    
+    @IBAction func buttonTwoClicked(sender: UIButton){
+        print("Button Two Clicked")
+    }
+    
+    @IBAction func buttonThreeClicked(sender: UIButton){
+        print("Button Three Clicked")
+    }
+    
+    @IBAction func buttonFourClicked(sender: UIButton){
+        print("Button Four Clicked")
+    }
+    
 
     /*
     // Override to support conditional editing of the table view.

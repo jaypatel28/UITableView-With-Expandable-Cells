@@ -9,7 +9,39 @@
 import UIKit
 
 class PickerTableViewCell: UITableViewCell {
-
+    var isObserving = false;
+    @IBOutlet var titleLabel: UILabel!
+    @IBOutlet var datePicker: UIDatePicker!
+    
+    let expandedHeight: CGFloat = 200
+    let defaultHeight:  CGFloat = 44
+    
+    func checkHeight() {
+        datePicker.hidden = (frame.size.height < expandedHeight)
+    }
+    
+    func watchFrameChanges() {
+        if !isObserving {
+            addObserver(self, forKeyPath: "frame", options: .New, context: nil)
+            isObserving = true
+        }
+    }
+    
+    func ignoreFrameChanges() {
+        if isObserving {
+            removeObserver(self, forKeyPath: "frame")
+            isObserving = false
+        }
+        
+    }
+    
+    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+        if keyPath == "frame" {
+            checkHeight()
+        }
+    }
+    
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
